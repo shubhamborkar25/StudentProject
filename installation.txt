@@ -1,7 +1,11 @@
 Requirement
 Port: 8080 22 3306
 application/command : git, unzip
+
+******** this is for linux OS, for ubuntu OS command may be change
+
 --------------------------------------------------------------------------------------
+
 Tomcat server
 
 download mysql/mariadb
@@ -15,10 +19,12 @@ mysql > FLUSH PRIVILEGES;
 mysql > exit;
 
 **login with admin user**
-# mysql -h localhost -u admin -padmin1234
-create new database 
+# mysql -h localhost -u admin -pYourStrongPassword123!
+
+**** create new database *****
+
 mysql > create database <DATABASENAME>;              --- <DATABASENAME> = studentapp
-create table under database
+****  create table under database  ****
 mysql > use <DATABASENAME>;
 mysql > CREATE TABLE if not exists students(student_id INT NOT NULL AUTO_INCREMENT,
 	student_name VARCHAR(100) NOT NULL,
@@ -42,14 +48,17 @@ installation of tomcat
 
 - download tomcat file 
 	tomcat official site --> tomcat 8 --> zip file link copy --> on terminal download
+
 # wget https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.93/bin/apache-tomcat-8.5.93.zip
 
-	unnzip the file
+*****   unnzip the file  *******
+
 # unzip apache-tomcat-8.5.93.zip
 # cd apache-tomcat-8.5.93
 
 for tomcat start 
 # cd bin
+
 make sh file executable (permission)
 # chmod +x *.sh
 
@@ -71,6 +80,32 @@ setup student application
 
 # cp StudentProject/student.war apache-tomcat-8.5.93/webapps/
 # cp StudentProject/mysql-connector.jar apache-tomcat-8.5.93/lib/
+
+**** modify context.xml
+
+cd apache-tomcat-8.5.93/conf
+vim context.xml
+add below line at line 21
+
+    <Resource
+        name="jdbc/TestDB"
+        auth="Container"
+        type="javax.sql.DataSource"
+        maxTotal="100"
+        maxIdle="30"
+        maxWaitMillis="10000"
+        username="USERNAME"
+        password="PASSWORD"
+        driverClassName="com.mysql.jdbc.Driver"
+        url="jdbc:mysql://DB-ENDPOINT:3306/studentapp"
+    />
+
+
+------
+replace above with
+USERNAME	-- MYSQL USERNAME  EX. admin
+PASSWORD 	-- MYSQL PASSWORD  Ex. YourStrongPassword123!
+DB-ENDPOINT 	-- localhost       --- In RDS, use RDS database endpoint
 
 ****   Start tomcat  *******
 # cd apache-tomcat-8.5.93/bin
